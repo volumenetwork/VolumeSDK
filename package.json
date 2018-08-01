@@ -1,0 +1,25 @@
+{
+  "name": "volumeSDK",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "git@github.com:volumenetwork/VolumeSDK.git",
+  "author": "James Irving-Swift <james@irving-swift.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/",
+    "build": "babel src -d dist",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.3.0"
+  },
+  "dependencies": {
+    "eslint": "^5.0.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "lodash": "^4.17.10"
+  }
+}
