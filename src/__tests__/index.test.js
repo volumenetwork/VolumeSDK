@@ -1,12 +1,31 @@
-import MyModuleName from './../index';
+import clients from 'restify-clients';
+import VolumeSDK from '../index';
 
-/* global test */
+jest.mock('restify-clients');
 
-test('Outputs hello world!', () => {
-  const spy = jest.spyOn(console, 'log');
+/* global test, expect, jest */
 
-  MyModuleName.sayHelloWorld();
-  expect(spy).toHaveBeenCalled();
+test('Authentication Method', (done) => {
+  const vsdk = new VolumeSDK({
+    url: 'https://foo.bar/',
+  });
 
-  spy.mockRestore();
+  clients.createJsonClient.mockImplementation(() => ({
+    get: (url, data, cb) => {
+      cb(null, { foo: 'bar' });
+    },
+    post: (url, data, cb) => {
+      cb(null, { foo: 'bar' });
+    },
+  }));
+
+  const email = 'foo@bin.baz';
+  const password = 'bar';
+
+  vsdk.authenticate(email, password)
+    .then((result) => {
+      expect(vsdk.get).toHaveBeenCalled();
+
+      done();
+    });
 });
