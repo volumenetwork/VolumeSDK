@@ -1,4 +1,4 @@
-import clients from 'restify-clients';
+import axios from 'axios';
 import lodashReject from 'lodash/reject';
 import reduce from 'lodash/reduce';
 import isNull from 'lodash/isNull';
@@ -109,12 +109,10 @@ export default class VolumeSDK {
   constructor(opts) {
     this.apiKey = null;
     this.baseUrl = opts.url;
-    this.client = clients.createJsonClient({
+    this.axios = axios.create({
       url: this.baseUrl,
-      followRedirects: true,
-      version: '*',
-      requestTimeout: opts.requestTimeout || 10000,
-      connectTimeout: opts.connectTimeout || 10000,
+      maxRedirects: 5,
+      responseType: 'json',
     });
 
     this.log = opts.log || defaultLogger;
@@ -145,18 +143,15 @@ export default class VolumeSDK {
    * @async
    */
   authenticate(email, password) {
-    return new Promise((resolve, reject) => {
-      this.client.post(`${this.baseUrl}/login`, {
-        email,
-        password,
-      }, (err, req, res, obj) => {
-        if (err) {
-          return reject(err);
-        }
+    return this.axios.post(`${this.baseUrl}/login`, {
+      email,
+      password,
+    }).then((result) => {
+      if (result.data.result.token) {
+        this.apiKey = result.data.result.token;
+      }
 
-        this.apiKey = obj.result.token;
-        return resolve(obj.result);
-      });
+      return result.data;
     });
   }
 
@@ -175,26 +170,18 @@ export default class VolumeSDK {
     const method = httpMethod.toLowerCase();
     const formattedUrl = this.formatUrl(url, method === 'get' ? data : {});
 
-    return new Promise((resolve, reject) => {
-      const cb = (err, req, res, obj) => {
-        if (!res) {
-          return reject(new Error('No response! it is likely that there is no connection to cms!'));
-        }
+    function getData(response) {
+      return response.data ? response.data : {};
+    }
 
-        if (isUnauthenticated(res)) {
-          return reject(new Error('Not Authenticated'));
-        }
+    this.log(`${method}:${formattedUrl}`);
+    if (method === 'get') {
+      return this.axios.get(formattedUrl)
+        .then(getData);
+    }
 
-        return resolve(obj || {});
-      };
-
-      this.log(`${method}:${formattedUrl}`);
-      if (method === 'get') {
-        return this.client.get(formattedUrl, cb);
-      }
-
-      return this.client[method](formattedUrl, data, cb);
-    });
+    return this.axios[method](formattedUrl, data)
+      .then(getData);
   }
 
   /**
@@ -278,7 +265,7 @@ export default class VolumeSDK {
       myUrl = getRequiredSubDir(this.baseUrl) + url;
     }
 
-    return `${myUrl.split('?').shift()}?${toQueryString(a)}`;
+    return `${this.baseUrl}${myUrl.split('?').shift()}?${toQueryString(a)}`;
   }
 
   fetchChannels() {

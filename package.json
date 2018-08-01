@@ -20,10 +20,10 @@
     "jest": "^23.3.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "eslint": "^5.0.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
-    "lodash": "^4.17.10",
-    "restify-clients": "^2.5.0"
+    "lodash": "^4.17.10"
   }
 }
