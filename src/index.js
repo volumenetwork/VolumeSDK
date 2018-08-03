@@ -2,6 +2,7 @@ import axios from 'axios';
 import lodashReject from 'lodash/reject';
 import reduce from 'lodash/reduce';
 import isNull from 'lodash/isNull';
+import { GET_CHANNELS } from './urls';
 
 const defaultLogger = () => {};
 
@@ -20,8 +21,11 @@ const defaultLogger = () => {};
 function isBaseUrlOnly(baseUrl) {
   const urlWithoutProtocol = baseUrl.replace(/.*?:\/\//g, '');
   let splt = urlWithoutProtocol.split('/');
-
   splt = lodashReject(splt, item => item === '');
+
+  if (splt[1] === 'app_dev.php') {
+    return true;
+  }
 
   return splt.length === 1;
 }
@@ -86,26 +90,9 @@ function toQueryString(obj) {
 }
 
 /**
- * Method that indicates if a response has an authentication error
- *
- * @method isUnauthenticated
- *
- * @param {Object} res
- *
- * @return {boolean}
- *
- * @private
- */
-function isUnauthenticated(res) {
-  const unauthenticatedHttpCodes = [401, 403];
-
-  return (res.statusCode && unauthenticatedHttpCodes.indexOf(res.statusCode) > -1);
-}
-
-/**
  * @class VolumeSDK
  */
-export default class VolumeSDK {
+class VolumeSDK {
   constructor(opts) {
     this.apiKey = null;
     this.baseUrl = opts.url;
@@ -143,7 +130,7 @@ export default class VolumeSDK {
    * @async
    */
   authenticate(email, password) {
-    return this.axios.post(`${this.baseUrl}/login`, {
+    return this.axios.post(this.formatUrl('/login', {}), {
       email,
       password,
     }).then((result) => {
@@ -189,12 +176,12 @@ export default class VolumeSDK {
    * @method get
    *
    * @param {String} url
-   * @param {Object} args
+   * @param {Object} [args]
    *
    * @return {*}
    */
   get(url, args) {
-    return this.call('get', url, args);
+    return this.call('get', url, args || {});
   }
 
   /**
@@ -267,8 +254,6 @@ export default class VolumeSDK {
 
     return `${this.baseUrl}${myUrl.split('?').shift()}?${toQueryString(a)}`;
   }
-
-  fetchChannels() {
-    return this.get('/UHDPro/channel', {});
-  }
 }
+
+export default VolumeSDK;
