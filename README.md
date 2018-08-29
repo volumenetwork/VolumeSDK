@@ -6,7 +6,7 @@ Collection of Tools to deals with the Volume API
 
 `yarn add volumesdk`
 
-```$xslt
+```js
 import VolumeSDK from 'volumesdk';
 
 const url = 'https://myapi.volumenetwork.com';
@@ -31,7 +31,7 @@ vsdk.authenticate(email, password)
 
 ### Authenticate
 
-```$xslt
+```js
 import VolumeSDK from 'volumesdk';
 
 const url = 'https://myapi.volumenetwork.com';
@@ -49,11 +49,30 @@ vsdk.authenticate(email, password)
 
 ```
 
+### Check is session is active (i.e. not expired)
+
+```js
+import VolumeSDK from 'volumesdk';
+
+const url = 'https://myapi.volumenetwork.com';
+const email = 'bilbo.baggins@theshire.com';
+const password = 'myPrecious';
+
+const vsdk = new VolumeSDK({
+  url,
+});
+
+vsdk.sessionIsActive()
+  .then((result) => {
+    console.log(result); // true / false
+  });
+```
+
 ### Get Channels
 
 N.B. Must have authenticated first.
 
-```$xslt
+```js
 vsdk.fetchChannels()
   .then((channels) => {
     console.log(channels);
@@ -65,7 +84,7 @@ vsdk.fetchChannels()
 
 #### Get All
 
-```$xslt
+```js
 
 import Channel from 'volumesdk/channel';
 
@@ -90,7 +109,7 @@ c.authenticate(email, password)
 
 #### Get All
 
-```$xslt
+```js
 
 import Storyboard from 'volumesdk/storyboard';
 
@@ -113,7 +132,7 @@ s.authenticate(email, password)
 
 #### Get By Id
 
-```$xslt
+```js
 
 import Storyboard from 'volumesdk/storyboard';
 
@@ -137,7 +156,7 @@ s.authenticate(email, password)
 
 #### Save
 
-```$xslt
+```js
 import Storyboard from 'volumesdk/storyboard';
 
 const url = 'https://myapi.volumenetwork.com';

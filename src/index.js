@@ -2,7 +2,6 @@ import axios from 'axios';
 import lodashReject from 'lodash/reject';
 import reduce from 'lodash/reduce';
 import isNull from 'lodash/isNull';
-import { GET_CHANNELS } from './urls';
 
 const defaultLogger = () => {};
 
@@ -142,6 +141,22 @@ class VolumeSDK {
     });
   }
 
+  /**
+   * Method to check if the current session is active
+   *
+   * @returns {Promise<any>}
+   */
+  sessionIsActive() {
+    let authenticated = false;
+
+    return new Promise((resolve) => {
+      this.get('/UHDPro/user/session', {})
+        .then((result) => {
+          authenticated = result.success;
+        })
+        .catch(() => resolve(authenticated));
+    });
+  }
 
   /**
    *
