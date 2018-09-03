@@ -147,14 +147,10 @@ class VolumeSDK {
    * @returns {Promise<any>}
    */
   sessionIsActive() {
-    let authenticated = false;
-
     return new Promise((resolve) => {
       this.get('/UHDPro/user/session', {})
-        .then((result) => {
-          authenticated = result.success;
-        })
-        .catch(() => resolve(authenticated));
+        .then(result => resolve(result.success))
+        .catch(() => resolve(false));
     });
   }
 
