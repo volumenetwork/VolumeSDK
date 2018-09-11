@@ -86,7 +86,7 @@ vsdk.fetchChannels()
 
 ```js
 
-import Channel from 'volumesdk/channel';
+import Channel from 'volumesdk/dist/channel';
 
 const url = 'https://myapi.volumenetwork.com';
 const email = 'bilbo.baggins@theshire.com';
@@ -101,9 +101,34 @@ c.authenticate(email, password)
   .then(() => c.fetchAll()
     .then((result) => {
       console.log(result);
-    });
+    }));
 
 ```
+
+### Media
+
+#### Get All
+
+```js
+
+import Storyboard from 'volumesdk/dist/medias';
+
+const url = 'https://myapi.volumenetwork.com';
+const email = 'bilbo.baggins@theshire.com';
+const password = 'myPrecious';
+
+const m = new Media({
+  url,
+});
+
+
+m.authenticate(email, password)
+  .then(() => s.fetchAll()
+    .then((result) => {
+      console.log(result);
+    }));
+```
+
 
 ### Storyboards
 
@@ -111,7 +136,7 @@ c.authenticate(email, password)
 
 ```js
 
-import Storyboard from 'volumesdk/storyboard';
+import Storyboard from 'volumesdk/dist/storyboard';
 
 const url = 'https://myapi.volumenetwork.com';
 const email = 'bilbo.baggins@theshire.com';
@@ -126,7 +151,7 @@ s.authenticate(email, password)
   .then(() => s.fetchAll()
     .then((result) => {
       console.log(result);
-    });
+    }));
 
 ```
 
@@ -134,7 +159,7 @@ s.authenticate(email, password)
 
 ```js
 
-import Storyboard from 'volumesdk/storyboard';
+import Storyboard from 'volumesdk/dist/storyboard';
 
 const url = 'https://myapi.volumenetwork.com';
 const email = 'bilbo.baggins@theshire.com';
@@ -150,14 +175,14 @@ s.authenticate(email, password)
   .then(() => s.fetch(id)
     .then((result) => {
       console.log(result);
-    });
+    }));
 
 ```
 
 #### Save
 
 ```js
-import Storyboard from 'volumesdk/storyboard';
+import Storyboard from 'volumesdk/dist/storyboard';
 
 const url = 'https://myapi.volumenetwork.com';
 const email = 'bilbo.baggins@theshire.com';
@@ -179,6 +204,6 @@ s.authenticate(email, password)
     })
     .then((result) => {
       console.log(result);
-    });
+    }));
 
 ```
